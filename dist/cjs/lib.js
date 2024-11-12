@@ -1,15 +1,20 @@
-import { CookieJar } from 'tough-cookie';
-import got from 'got';
-import { convertCookieToTough } from './utils.js';
-import { Browser } from './Browser.js';
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _toughCookie = require("tough-cookie");
+var _got = _interopRequireDefault(require("got"));
+var _utils = require("./utils.js");
+var _Browser = require("./Browser.js");
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 let userAgent;
-const jar = new CookieJar();
-
+const jar = new _toughCookie.CookieJar();
 async function getUserAgent() {
   let browser;
   try {
-    browser = await Browser.create();
+    browser = await _Browser.Browser.create();
     return await browser.getUserAgent();
   } finally {
     if (browser) {
@@ -17,19 +22,15 @@ async function getUserAgent() {
     }
   }
 }
-
 function isCloudflareJSChallenge(content) {
   return content.includes('_cf_chl_opt');
 }
-
 async function fillCookie(url) {
   let browser;
   try {
-    browser = await Browser.create();
+    browser = await _Browser.Browser.create();
     await browser.navigate(url);
-
     const timeoutInMs = 16000;
-
     let count = 1;
     let content = '';
     while (content == '' || isCloudflareJSChallenge(content)) {
@@ -39,10 +40,9 @@ async function fillCookie(url) {
         throw new Error('stuck');
       }
     }
-
     const cookies = await browser.getCookies();
     for (let cookie of cookies) {
-      jar.setCookie(convertCookieToTough(cookie), url.toString());
+      jar.setCookie((0, _utils.convertCookieToTough)(cookie), url.toString());
     }
   } finally {
     if (browser) {
@@ -50,12 +50,10 @@ async function fillCookie(url) {
     }
   }
 }
-
 const handler = (options, next) => {
   if (options.isStream) {
     throw new Error('stream not supported');
   }
-
   return (async () => {
     if (!userAgent) {
       // To improve: it's not optimised to start a browser
@@ -64,7 +62,6 @@ const handler = (options, next) => {
       userAgent = await getUserAgent();
     }
     options.headers['user-agent'] = userAgent;
-
     let response;
     let error;
     try {
@@ -80,11 +77,10 @@ const handler = (options, next) => {
       return response;
     }
     await fillCookie(options.url);
-    return got(undefined, undefined, options);
+    return (0, _got.default)(undefined, undefined, options);
   })();
 };
-
-export default got.extend({
+var _default = exports.default = _got.default.extend({
   cookieJar: jar,
   hooks: {
     beforeRequest: [handler]

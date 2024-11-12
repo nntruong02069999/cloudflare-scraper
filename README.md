@@ -21,10 +21,25 @@ Make sure you alse have **xfvb** linux package installed
 sudo apt-get install xvfb
 ``` 
 
-## Quick Example
+## Usage
 
-```js
-import got from 'cloudflare-scraper';
+### ES Modules
+```javascript
+import got from '@nntruong02061999/cloudflare-scraper';
+
+(async () => {
+  try {
+    const response = await got.get('https://nowsecure.nl');
+    console.log(response.body);
+  } catch (error) {
+    console.log(error);
+  }
+})();
+```
+
+### CommonJS
+```javascript
+const got = require('@nntruong02061999/cloudflare-scraper');
 
 (async () => {
   try {

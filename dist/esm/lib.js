@@ -2,10 +2,8 @@ import { CookieJar } from 'tough-cookie';
 import got from 'got';
 import { convertCookieToTough } from './utils.js';
 import { Browser } from './Browser.js';
-
 let userAgent;
 const jar = new CookieJar();
-
 async function getUserAgent() {
   let browser;
   try {
@@ -17,19 +15,15 @@ async function getUserAgent() {
     }
   }
 }
-
 function isCloudflareJSChallenge(content) {
   return content.includes('_cf_chl_opt');
 }
-
 async function fillCookie(url) {
   let browser;
   try {
     browser = await Browser.create();
     await browser.navigate(url);
-
     const timeoutInMs = 16000;
-
     let count = 1;
     let content = '';
     while (content == '' || isCloudflareJSChallenge(content)) {
@@ -39,7 +33,6 @@ async function fillCookie(url) {
         throw new Error('stuck');
       }
     }
-
     const cookies = await browser.getCookies();
     for (let cookie of cookies) {
       jar.setCookie(convertCookieToTough(cookie), url.toString());
@@ -50,12 +43,10 @@ async function fillCookie(url) {
     }
   }
 }
-
 const handler = (options, next) => {
   if (options.isStream) {
     throw new Error('stream not supported');
   }
-
   return (async () => {
     if (!userAgent) {
       // To improve: it's not optimised to start a browser
@@ -64,7 +55,6 @@ const handler = (options, next) => {
       userAgent = await getUserAgent();
     }
     options.headers['user-agent'] = userAgent;
-
     let response;
     let error;
     try {
@@ -83,7 +73,6 @@ const handler = (options, next) => {
     return got(undefined, undefined, options);
   })();
 };
-
 export default got.extend({
   cookieJar: jar,
   hooks: {
