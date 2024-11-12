@@ -1,21 +1,16 @@
-import { CookieJar } from 'tough-cookie';
-import got from 'got';
-import { convertCookieToTough } from './utils.js';
-import { Browser } from './Browser.js';
+const { CookieJar } = require('tough-cookie');
+const got = require('got');
+const { convertCookieToTough } = require('./utils.js');
+const Browser = require('./Browser.js');
 
 let userAgent;
 const jar = new CookieJar();
 
 async function getUserAgent() {
-  let browser;
-  try {
-    browser = await Browser.create();
-    return await browser.getUserAgent();
-  } finally {
-    if (browser) {
-      browser.close();
-    }
-  }
+  const browser = await Browser.create();
+  const userAgent = await browser.getUserAgent();
+  await browser.close();
+  return userAgent;
 }
 
 function isCloudflareJSChallenge(content) {
@@ -84,9 +79,10 @@ const handler = (options, next) => {
   })();
 };
 
-export default got.extend({
+const instance = got.extend({
   cookieJar: jar,
-  hooks: {
-    beforeRequest: [handler]
-  }
+  handlers: [handler]
 });
+
+
+module.exports = instance;

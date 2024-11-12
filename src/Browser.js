@@ -125,4 +125,4 @@ class Browser {
   }
 }
 
-export { Browser };
+module.exports = Browser;

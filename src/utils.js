@@ -1,6 +1,6 @@
-import { Cookie } from 'tough-cookie';
+const { Cookie } = require('tough-cookie');
 
-export function convertCookieToTough(cookie) {
+function convertCookieToTough(cookie) {
   const { name, value, expires, domain, path } = cookie;
   const isExpiresValid = expires && typeof expires === 'number';
 
@@ -16,3 +16,5 @@ export function convertCookieToTough(cookie) {
     path
   });
 }
+
+module.exports = { convertCookieToTough };

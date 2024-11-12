@@ -1,2 +1,2 @@
-import scraper from './lib.js';
-export default scraper;
+var scraper = require('./lib.js');
+module.exports = scraper;
