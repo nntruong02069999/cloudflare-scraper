@@ -1,6 +1,6 @@
 {
   "name": "@nntruong02061999/cloudflare-scraper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publishConfig": {
     "access": "public"
   },
@@ -59,5 +59,13 @@
     "tabWidth": 2
   },
   "types": "index.d.ts",
-  "type": "commonjs"
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nntruong02069999/cloudflare-scraper"
+  },
+  "bugs": {
+    "url": "https://github.com/nntruong02069999/cloudflare-scraper/issues"
+  },
+  "homepage": "https://github.com/nntruong02069999/cloudflare-scraper#readme"
 }
